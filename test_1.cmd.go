@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lukerhoads/starport/starport/services/plugins"
 	"github.com/spf13/cobra"
+	"github.com/tendermint/starport/starport/services/plugins"
 )
 
 type testCmd string
