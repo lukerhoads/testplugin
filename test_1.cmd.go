@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lukerhoads/plugintypes"
 	"github.com/spf13/cobra"
-	"github.com/tendermint/starport/starport/services/plugins"
 )
 
 type testCmd string
@@ -16,6 +16,10 @@ func (testCmd) ParentCommand() []string {
 
 func (testCmd) Name() string {
 	return "TestCommand"
+}
+
+func (testCmd) NumArgs() int {
+	return 0
 }
 
 func (testCmd) Usage() string {
@@ -42,8 +46,8 @@ func (exampleCmds) Init(ctx context.Context) error {
 	return nil
 }
 
-func (exampleCmds) Registry() map[string]plugins.Command {
-	return map[string]plugins.Command{
+func (exampleCmds) Registry() map[string]plugintypes.Command {
+	return map[string]plugintypes.Command{
 		"test": testCmd("test"),
 	}
 }
