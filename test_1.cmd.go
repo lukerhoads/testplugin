@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func main() {}
+
 type testCmd string
 
 func (testCmd) ParentCommand() []string {
