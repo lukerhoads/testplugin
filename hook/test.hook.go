@@ -59,7 +59,7 @@ func main() {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"test": &plugintypes.CommandPlugin{Impl: &testHooks{}},
+			"test": &plugintypes.HookPlugin{Impl: &testHooks{}},
 		},
 	})
 }
