@@ -3,7 +3,7 @@ module github.com/lukerhoads/testplugin
 go 1.17
 
 require (
-	github.com/lukerhoads/plugintypes v1.0.0
+	github.com/lukerhoads/plugintypes v1.0.2
 	github.com/spf13/cobra v1.2.1
 )
 

@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/go-plugin"
+	"github.com/lukerhoads/plugintypes"
 	"github.com/spf13/cobra"
-	"github.com/tendermint/starport/starport/services/pluginsrpc"
 )
 
 type testCmd string
@@ -47,8 +47,8 @@ func (testCmds) Init(ctx context.Context) error {
 	return nil
 }
 
-func (testCmds) Registry() map[string]pluginsrpc.Command {
-	return map[string]pluginsrpc.Command{
+func (testCmds) Registry() map[string]plugintypes.Command {
+	return map[string]plugintypes.Command{
 		"test": testCmd("test"),
 	}
 }
@@ -57,9 +57,9 @@ var Commands testCmds
 
 func main() {
 	plugin.Serve(&plugin.ServeConfig{
-		HandshakeConfig: pluginsrpc.HandshakeConfig,
+		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"test": &pluginsrpc.CommandPlugin{Impl: &testCmds{}},
+			"test": &plugintypes.CommandPlugin{Impl: &testCmds{}},
 		},
 	})
 }
