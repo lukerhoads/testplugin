@@ -49,7 +49,7 @@ func (testHooks) Init(ctx context.Context) error {
 
 func (testHooks) Registry() map[string]plugintypes.Hook {
 	return map[string]plugintypes.Hook{
-		"test": testHook("test"),
+		"hook": testHook("test"),
 	}
 }
 
@@ -59,7 +59,7 @@ func main() {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"test": &plugintypes.HookPlugin{Impl: testHooks{}},
+			"hook": &plugintypes.HookPlugin{Impl: testHooks{}},
 		},
 	})
 }

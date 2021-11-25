@@ -49,7 +49,7 @@ func (testCmds) Init(ctx context.Context) error {
 
 func (testCmds) Registry() map[string]plugintypes.Command {
 	return map[string]plugintypes.Command{
-		"test": testCmd("test"),
+		"command": testCmd("test"),
 	}
 }
 
@@ -59,7 +59,7 @@ func main() {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"test": &plugintypes.CommandPlugin{Impl: testCmds{}},
+			"command": &plugintypes.CommandPlugin{Impl: testCmds{}},
 		},
 	})
 }
