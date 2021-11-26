@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 	"github.com/lukerhoads/plugintypes"
 	"github.com/spf13/cobra"
@@ -58,12 +56,6 @@ func (t testCmds) Registry() map[string]plugintypes.Command {
 var Commands testCmds
 
 func main() {
-	logger := hclog.New(&hclog.LoggerOptions{
-		Level:      hclog.Trace,
-		Output:     os.Stderr,
-		JSONFormat: true,
-	})
-
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
