@@ -1,39 +1,47 @@
 package main
 
 import (
-	"context"
-	"encoding/gob"
 	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/hashicorp/go-plugin"
 	"github.com/lukerhoads/plugintypes"
 	"github.com/spf13/cobra"
 )
 
-type TestCommand struct{}
+type TestCommandMap struct{}
 
-func (TestCommand) ParentCommand() []string {
-	return []string{"starport", "chain", "serve"}
+func (t *TestCommandMap) Commands() []string {
+	return []string{"TestCmd"}
 }
 
-func (TestCommand) Name() string {
-	return "TestCommand"
+type TestCommand plugintypes.Command
+
+func (t *TestCommand) GetParentCommand() []string {
+	return t.ParentCommand
 }
 
-func (TestCommand) NumArgs() int {
-	return 0
+func (t *TestCommand) GetName() string {
+	return t.Name
 }
 
-func (TestCommand) Usage() string {
-	return "test"
+func (t *TestCommand) GetUsage() string {
+	return t.Usage
 }
 
-func (TestCommand) ShortDesc() string {
-	return "Short description"
+func (t *TestCommand) GetShortDesc() string {
+	return t.ShortDesc
 }
 
-func (TestCommand) LongDesc() string {
-	return "Long description"
+func (t *TestCommand) GetLongDesc() string {
+	return t.LongDesc
+}
+
+func (t *TestCommand) GetNumArgs() int {
+	return t.NumArgs
 }
 
 func (TestCommand) Exec(cmd *cobra.Command, flags []string) error {
@@ -41,32 +49,35 @@ func (TestCommand) Exec(cmd *cobra.Command, flags []string) error {
 	return nil
 }
 
-type TestCommands struct{}
-
-func (TestCommands) Init(ctx context.Context) error {
-	fmt.Println("test cmd module loaded")
-	return nil
-}
-
-func (TestCommands) Registry() map[string]plugintypes.Command {
-	return map[string]plugintypes.Command{
-		"command": TestCommand{},
-	}
-}
-
 func init() {
-	gob.Register(map[string]plugintypes.Command{})
-	gob.Register(TestCommand{})
-	gob.Register(TestCommands{})
+	// gob.Register(TestCommandMap{})
+}
+
+var TestCmd TestCommand = TestCommand{
+	ParentCommand: []string{"starport", "chain", "serve"},
+	Name:          "TestCommand",
+	NumArgs:       0,
+	Usage:         "Test",
+	ShortDesc:     "Short description",
+	LongDesc:      "Long description",
 }
 
 func main() {
-	commands := &TestCommands{}
+	commandMap := &TestCommandMap{}
+
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		log.Println("Exiting...")
+		os.Exit(0)
+	}()
 
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"command": &plugintypes.CommandPlugin{Impl: commands},
+			"command_map": &plugintypes.CommandMapperPlugin{Impl: commandMap},
+			"TestCmd":     &plugintypes.CommandModulePlugin{Impl: TestCmd},
 		},
 	})
 }

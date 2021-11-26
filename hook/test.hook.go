@@ -1,35 +1,35 @@
 package main
 
 import (
-	"context"
-	"encoding/gob"
 	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/hashicorp/go-plugin"
 	"github.com/lukerhoads/plugintypes"
 	"github.com/spf13/cobra"
 )
 
-type TestHook struct{}
+type TestHookMap struct{}
 
-func (TestHook) ParentCommand() []string {
-	return []string{"starport", "chain", "serve"}
+func (t *TestHookMap) Hooks() []string {
+	return []string{"TestHk"}
 }
 
-func (TestHook) Name() string {
-	return "TestCommand"
+type TestHook plugintypes.Hook
+
+func (t *TestHook) GetParentCommand() []string {
+	return t.ParentCommand
 }
 
-func (TestHook) Type() string {
-	return "PreRun"
+func (t *TestHook) GetName() string {
+	return t.Name
 }
 
-func (TestHook) ShortDesc() string {
-	return "Short description"
-}
-
-func (TestHook) LongDesc() string {
-	return "Long description"
+func (t *TestHook) GetType() string {
+	return t.Type
 }
 
 func (TestHook) PreRun(cmd *cobra.Command, flags []string) error {
@@ -41,27 +41,32 @@ func (TestHook) PostRun(cmd *cobra.Command, flags []string) error {
 	return nil
 }
 
-type TestHooks struct{}
-
-func (TestHooks) Init(ctx context.Context) error {
-	fmt.Println("test hook module loaded")
-	return nil
+func init() {
+	// gob.Register(TestHook{})
 }
 
-func (TestHooks) Registry() map[string]plugintypes.Hook {
-	return map[string]plugintypes.Hook{
-		"hook": TestHook{},
-	}
+var TestHk TestHook = TestHook{
+	ParentCommand: []string{"starport", "chain", "serve"},
+	Name:          "TestCommand",
+	Type:          "PreRun",
 }
 
 func main() {
-	gob.Register(TestHook{})
-	hooks := &TestHooks{}
+	hooks := &TestHookMap{}
+
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		log.Println("Exiting...")
+		os.Exit(0)
+	}()
 
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"hook": &plugintypes.HookPlugin{Impl: hooks},
+			"hook_map": &plugintypes.HookMapperPlugin{Impl: hooks},
+			"TestHk":   &plugintypes.HookModulePlugin{Impl: TestHk},
 		},
 	})
 }
