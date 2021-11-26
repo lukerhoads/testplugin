@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"fmt"
 
 	"github.com/hashicorp/go-plugin"
@@ -9,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type TestHook string
+type TestHook struct{}
 
 func (TestHook) ParentCommand() []string {
 	return []string{"starport", "chain", "serve"}
@@ -49,11 +50,12 @@ func (TestHooks) Init(ctx context.Context) error {
 
 func (TestHooks) Registry() map[string]plugintypes.Hook {
 	return map[string]plugintypes.Hook{
-		"hook": TestHook("test"),
+		"hook": TestHook{},
 	}
 }
 
 func main() {
+	gob.Register(TestHook{})
 	hooks := &TestHooks{}
 
 	plugin.Serve(&plugin.ServeConfig{
