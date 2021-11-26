@@ -57,6 +57,7 @@ func (TestCommands) Registry() map[string]plugintypes.Command {
 func main() {
 	gob.Register(map[string]plugintypes.Command{})
 	gob.Register(TestCommand{})
+	gob.Register(TestCommands{})
 	commands := &TestCommands{}
 
 	plugin.Serve(&plugin.ServeConfig{
