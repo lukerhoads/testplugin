@@ -9,57 +9,57 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type testHook string
+type TestHook string
 
-func (testHook) ParentCommand() []string {
+func (TestHook) ParentCommand() []string {
 	return []string{"starport", "chain", "serve"}
 }
 
-func (testHook) Name() string {
+func (TestHook) Name() string {
 	return "TestCommand"
 }
 
-func (testHook) Type() string {
+func (TestHook) Type() string {
 	return "PreRun"
 }
 
-func (testHook) ShortDesc() string {
+func (TestHook) ShortDesc() string {
 	return "Short description"
 }
 
-func (testHook) LongDesc() string {
+func (TestHook) LongDesc() string {
 	return "Long description"
 }
 
-func (testHook) PreRun(cmd *cobra.Command, flags []string) error {
+func (TestHook) PreRun(cmd *cobra.Command, flags []string) error {
 	fmt.Println("Executing pre run...")
 	return nil
 }
 
-func (testHook) PostRun(cmd *cobra.Command, flags []string) error {
+func (TestHook) PostRun(cmd *cobra.Command, flags []string) error {
 	return nil
 }
 
-type testHooks struct{}
+type TestHooks struct{}
 
-func (testHooks) Init(ctx context.Context) error {
+func (TestHooks) Init(ctx context.Context) error {
 	fmt.Println("test hook module loaded")
 	return nil
 }
 
-func (testHooks) Registry() map[string]plugintypes.Hook {
+func (TestHooks) Registry() map[string]plugintypes.Hook {
 	return map[string]plugintypes.Hook{
-		"hook": testHook("test"),
+		"hook": TestHook("test"),
 	}
 }
 
-var Commands testHooks
-
 func main() {
+	hooks := &TestHooks{}
+
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"hook": &plugintypes.HookPlugin{Impl: testHooks{}},
+			"hook": &plugintypes.HookPlugin{Impl: hooks},
 		},
 	})
 }
