@@ -9,57 +9,57 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type testCmd string
+type TestCommand string
 
-func (testCmd) ParentCommand() []string {
+func (TestCommand) ParentCommand() []string {
 	return []string{"starport", "chain", "serve"}
 }
 
-func (testCmd) Name() string {
+func (TestCommand) Name() string {
 	return "TestCommand"
 }
 
-func (testCmd) NumArgs() int {
+func (TestCommand) NumArgs() int {
 	return 0
 }
 
-func (testCmd) Usage() string {
+func (TestCommand) Usage() string {
 	return "test"
 }
 
-func (testCmd) ShortDesc() string {
+func (TestCommand) ShortDesc() string {
 	return "Short description"
 }
 
-func (testCmd) LongDesc() string {
+func (TestCommand) LongDesc() string {
 	return "Long description"
 }
 
-func (testCmd) Exec(cmd *cobra.Command, flags []string) error {
+func (TestCommand) Exec(cmd *cobra.Command, flags []string) error {
 	fmt.Println("Executing...")
 	return nil
 }
 
-type testCmds struct{}
+type TestCommands struct{}
 
-func (testCmds) Init(ctx context.Context) error {
+func (TestCommands) Init(ctx context.Context) error {
 	fmt.Println("test cmd module loaded")
 	return nil
 }
 
-func (testCmds) Registry() map[string]plugintypes.Command {
+func (TestCommands) Registry() map[string]plugintypes.Command {
 	return map[string]plugintypes.Command{
-		"command": testCmd("test"),
+		"command": TestCommand("command"),
 	}
 }
 
-var Commands testCmds
-
 func main() {
+	commands := &TestCommands{}
+
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
-			"command": &plugintypes.CommandPlugin{Impl: testCmds{}},
+			"command": &plugintypes.CommandPlugin{Impl: commands},
 		},
 	})
 }
