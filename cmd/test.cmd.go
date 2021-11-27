@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -20,32 +19,32 @@ func (t *TestCommandMap) Commands() []string {
 
 type TestCommand plugintypes.Command
 
-func (t *TestCommand) GetParentCommand() []string {
+func (t TestCommand) GetParentCommand() []string {
 	return t.ParentCommand
 }
 
-func (t *TestCommand) GetName() string {
+func (t TestCommand) GetName() string {
 	return t.Name
 }
 
-func (t *TestCommand) GetUsage() string {
+func (t TestCommand) GetUsage() string {
 	return t.Usage
 }
 
-func (t *TestCommand) GetShortDesc() string {
+func (t TestCommand) GetShortDesc() string {
 	return t.ShortDesc
 }
 
-func (t *TestCommand) GetLongDesc() string {
+func (t TestCommand) GetLongDesc() string {
 	return t.LongDesc
 }
 
-func (t *TestCommand) GetNumArgs() int {
+func (t TestCommand) GetNumArgs() int {
 	return t.NumArgs
 }
 
 func (TestCommand) Exec(cmd *cobra.Command, flags []string) error {
-	fmt.Println("Executing...")
+	log.Println("Executing...")
 	return nil
 }
 
@@ -57,7 +56,7 @@ var TestCmd TestCommand = TestCommand{
 	ParentCommand: []string{"starport", "chain", "serve"},
 	Name:          "TestCommand",
 	NumArgs:       0,
-	Usage:         "Test",
+	Usage:         "test",
 	ShortDesc:     "Short description",
 	LongDesc:      "Long description",
 }

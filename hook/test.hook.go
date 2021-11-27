@@ -20,16 +20,16 @@ func (t *TestHookMap) Hooks() []string {
 
 type TestHook plugintypes.Hook
 
-func (t *TestHook) GetParentCommand() []string {
+func (t TestHook) GetParentCommand() []string {
 	return t.ParentCommand
 }
 
-func (t *TestHook) GetName() string {
+func (t TestHook) GetName() string {
 	return t.Name
 }
 
-func (t *TestHook) GetType() string {
-	return t.Type
+func (t TestHook) GetType() string {
+	return t.HookType
 }
 
 func (TestHook) PreRun(cmd *cobra.Command, flags []string) error {
@@ -47,8 +47,8 @@ func init() {
 
 var TestHk TestHook = TestHook{
 	ParentCommand: []string{"starport", "chain", "serve"},
-	Name:          "TestCommand",
-	Type:          "PreRun",
+	Name:          "TestHook",
+	HookType:      "PreRun",
 }
 
 func main() {
