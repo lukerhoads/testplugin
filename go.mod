@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/hashicorp/go-plugin v1.4.3
-	github.com/lukerhoads/plugintypes v1.0.4-0.20211127064311-8c0732e29438
+	github.com/lukerhoads/plugintypes v1.0.4-0.20211127083628-02a80895f543
 	github.com/spf13/cobra v1.2.1
 )
 

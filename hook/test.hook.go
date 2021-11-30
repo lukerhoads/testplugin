@@ -62,6 +62,7 @@ func main() {
 		os.Exit(0)
 	}()
 
+	// time this out maybe?
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: plugintypes.HandshakeConfig,
 		Plugins: map[string]plugin.Plugin{
