@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -33,7 +32,7 @@ func (t TestHook) GetType() string {
 }
 
 func (TestHook) PreRun(cmd *cobra.Command, flags []string) error {
-	fmt.Println("Executing pre run...")
+	log.Println("Executing pre run...")
 	return nil
 }
 
