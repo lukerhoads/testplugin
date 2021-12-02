@@ -45,7 +45,7 @@ func init() {
 }
 
 var TestHk TestHook = TestHook{
-	ParentCommand: []string{"starport", "chain", "serve", "test"},
+	ParentCommand: []string{"starport", "chain", "serve"},
 	Name:          "TestHook",
 	HookType:      "pre",
 }
